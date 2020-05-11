@@ -7,13 +7,20 @@ public class ATC {
 
     List<Aircraft> aircraftList = new ArrayList<>();
 
-    synchronized void addAircraft(String id) throws InterruptedException {
-        Aircraft aircraft = new Aircraft(id);
+    /**
+     * this method add the aircraft object to the aircraft list
+     * @param aircraft the object added to the list
+     * @throws InterruptedException
+     */
+    synchronized void addAircraft(Aircraft aircraft) throws InterruptedException {
         aircraftList.add(aircraft);
-        Thread thread = new Thread(aircraft);
-        thread.start();
     }
 
+    /**
+     * this method send the command to the aircraft
+     * @param aircraftId the id of the aircraft that has to be commanded
+     * @param cmd the type of class for command (TakeoffCommand or LandCommand)
+     */
     public void sendCommand(String aircraftId,AtcCommand cmd){
             for(Aircraft aircraft : aircraftList){
                 if(aircraft.getId().equals(aircraftId)){
@@ -22,10 +29,11 @@ public class ATC {
             }
     }
 
-    public String showAircraft(){
-        for(Aircraft aircraft : aircraftList){
-            return aircraft.toString();
-        }
-        return null;
+    /**
+     * this method return the aircraft from the list
+     * @return aircraft
+     */
+    public List<Aircraft> showAircraft() {
+        return aircraftList;
     }
 }
