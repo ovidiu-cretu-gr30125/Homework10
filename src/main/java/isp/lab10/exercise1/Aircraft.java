@@ -1,15 +1,15 @@
 package isp.lab10.exercise1;
 
+import javax.swing.*;
 
-
-import java.util.Observable;
-import java.util.Observer;
 
 public class Aircraft implements Runnable{
 
     private String id;
     private int altitude;
     private String aircraftStatus="ON STAND";
+    private boolean status=true;
+    private JTextField textField = new JTextField();
 
     public Aircraft(String id){
       this.id=id;
@@ -51,22 +51,17 @@ public class Aircraft implements Runnable{
      */
     @Override
     public void run() {
-        boolean status = true;
         long startTime=0,endTime=0,cruisingTime=0;
-        System.out.println("on stand..."+this.getId()+"");
-        System.out.println();
         while (status) {
             switch (aircraftStatus) {
                 case "ON STAND": {
                     try {
                         synchronized (this) {
-                            System.out.println("wait "+this.getId()+"");
                             this.wait();
                         }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("taxing "+this.getId()+"");
                     aircraftStatus= "TAXING";
                 }
                 break;
@@ -76,7 +71,6 @@ public class Aircraft implements Runnable{
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("taking off");
                     aircraftStatus="TAKING OFF";
                 }
                 break;
@@ -86,7 +80,6 @@ public class Aircraft implements Runnable{
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("ascending");
                     aircraftStatus="ASCENDING";
                 }
                 break;
@@ -96,7 +89,6 @@ public class Aircraft implements Runnable{
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("cruising");
                     aircraftStatus="CRUISING";
                 }
                 break;
@@ -111,8 +103,7 @@ public class Aircraft implements Runnable{
                     }
                     endTime = System.nanoTime();
                     cruisingTime  = endTime-startTime;
-                    System.out.println(cruisingTime);
-                    System.out.println("descending");
+                    System.out.println("Cruising time for aircraft "+this.getId()+""+ cruisingTime);
                     aircraftStatus="DESCENDING";
                 }
                 break;
@@ -122,21 +113,21 @@ public class Aircraft implements Runnable{
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("landed");
                     aircraftStatus="LANDED";
                 }
                 break;
                 case "LANDED":{
-                    System.out.println("stop");
                     status=false;
                 }
             }
         }
     }
-    public String getAircraftStatus(){
-        return aircraftStatus;
+    public boolean getAircraftStatus(){
+        return status;
     }
-
+    public String showStatus(){
+            return aircraftStatus;
+    }
     @Override
     public String toString() {
         return "Aircraft{" +

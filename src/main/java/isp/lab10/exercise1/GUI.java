@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Observable;
-import java.util.Observer;
 
 public class GUI extends JFrame implements ActionListener {
     JLabel labelForAircraftId = null;
@@ -30,7 +28,9 @@ public class GUI extends JFrame implements ActionListener {
     JScrollPane scrollPaneForAircraftList = null;
     JTextArea aircraftListTextArea = null;
     ATC atc = new ATC();
-    Aircraft aircraft = null;
+    Aircraft aircraft = new Aircraft("0");
+    String id ="0";
+
 
 
     public GUI(){
@@ -144,8 +144,9 @@ public class GUI extends JFrame implements ActionListener {
                 atc.addAircraft(aircraft);
                 Thread thread = new Thread(aircraft);
                 thread.start();
-                this.textFieldForAircraftId.setText(dialogTextFieldForAircraftId.getText());
-                this.textFieldForAircraftStatus.setText(aircraft.getAircraftStatus());
+                id=dialogTextFieldForAircraftId.getText();
+                this.textFieldForAircraftStatus.setText(atc.getStatusById(id));
+                this.textFieldForAircraftId.setText(id);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -215,12 +216,14 @@ public class GUI extends JFrame implements ActionListener {
                 AtcCommand takeoff = new TakeoffCommand(Integer.parseInt(dialogAltitudeTextField.getText()));
                 atc.sendCommand(dialogTextFieldForAircraftId.getText(), takeoff);
                 dialogForAddCommand.setVisible(false);
-                this.textFieldForAircraftStatus.setText(aircraft.getAircraftStatus());
-                this.textFieldForAircraftId.setText(aircraft.getId());
+                id = dialogTextFieldForAircraftId.getText();
+                this.textFieldForAircraftId.setText(id);
             } else if (dialogTextFieldForAddCommand.getText().equals("LAND")) {
                 AtcCommand land = new LandCommand();
                 atc.sendCommand(dialogTextFieldForAircraftId.getText(), land);
                 dialogForAddCommand.setVisible(false);
+                id = dialogTextFieldForAircraftId.getText();
+                this.textFieldForAircraftId.setText(id);
             }
         });
     }
@@ -246,7 +249,12 @@ public class GUI extends JFrame implements ActionListener {
             this.aircraftListTextArea.setEditable(false);
 
         }
-
+        public void  fillTextField(){
+        while(aircraft.getAircraftStatus()) {
+            this.textFieldForAircraftStatus.setText(atc.getStatusById(id));
+            System.out.println(atc.getStatusById(id));
+             }
+        }
     /**
      * this method perform the action by the button pushed
      * for addAircraftButton open the dialog box for adding an aircraft

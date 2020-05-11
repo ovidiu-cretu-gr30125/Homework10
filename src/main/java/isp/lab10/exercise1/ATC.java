@@ -36,4 +36,12 @@ public class ATC {
     public List<Aircraft> showAircraft() {
         return aircraftList;
     }
+
+    public String getStatusById(String id){
+        for(Aircraft aircraft :aircraftList){
+            if(aircraft.getId().equals(id))
+                return aircraft.showStatus();
+        }
+        return null;
+    }
 }
